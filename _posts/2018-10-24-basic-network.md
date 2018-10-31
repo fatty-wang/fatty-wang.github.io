@@ -10,7 +10,8 @@ tags:
     - linux
     - basic
 ---
->update 2018-10-27
+>update 2018-10-27    
+update 2018-10-31
 
 ## OSI七层协议
 >OSI: Open System Interconnection
@@ -97,5 +98,21 @@ MAC是网络接口设备所能处理的主要数据包裹，也是最终被物�
 
 !["IP数据包"](/img/network/IpPackage.png "IP数据包")
 
+上图中每一行所占的位数为32bits
 
+* Version，声明这个IP数据包的版本
+* IHL(Internet Header Length,IP包头长度)
+* Type of Service 这个项目的8位对应为“PPPDTRUU”。PPP：表示IP数据包的优先级，目前很少使用。D：0表示一般延迟，1表示低延迟。T：0表示一般质量传输，1表示为高质量。R：0表示一般可靠度，1表示高可靠度。UU：尚未被使用。
+* **Total Length** 这个数据包的总容量，包括包头和数据部分，因为这个栏位功16个bit，所以能表示的最大值为65535bytes,也就是IP数据包可达的最大值。
+* Identification(识别码)，由于IP数据包比MAC数据帧的要大，IP数据包需要被分成更小的IP分段后才能塞进MAC数据帧中，Identification用了标明每个小的IP分段是否来自同一个IP包。
+* Flags(特殊字段)，对应内容为“0DM”。D：0代表可以分段，1表示不可分段。M：0代表此IP为最后分段，1表示非最后分段。
+* Fragment Offset(分段偏移)：表示目前这个IP分段在原始IP数据包中所占位置。通过Total Length、Identification、Flags以及Fragment Offset就能够将小的IP分段在接收端组合起来了。
+* Time To Live(TTL，生存时间)：8bit，范围0到255。当这个IP数据包通过一个路由器时，TTL就会减1，当TTL为0时，这个数据包将会被直接丢弃。
+* Protocol Number，传输层和网络层本身的其他数据都是放在IP数据包中，这个字段记录了IP数据包内的数据是什么，如TCP、UDP和ICMP
+* Header Checksum(报头校验码)，用于检查IP报头是否错误
+* Source Address(来源IP地址)，32位
+* Destination Address(目的IP地址)
+* Options(其他参数)，额外功能，如安全处理机制，路由记录，时间戳，严格与宽松的来源路由等。
+* Padding(补齐)，若Options不足32位时，由Padding主动补齐。
 
+#### IP地址的组成与分级
