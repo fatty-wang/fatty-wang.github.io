@@ -128,3 +128,33 @@ IP在同一网络的意义：
 3. 即使同一物理网段，主机若不是同一网络，则广播地址不同，需要使用路由器来进行连接。
 4. Host_ID所占用的位数越大，Host_ID则越多，表示同一网络内可用以设定的主机IP数量越多。
 
+IP的分级，Inter NIC 将整个IP网段分为五种等级，等级的范围与32位的前几位有关：    
+Class A: Net_ID开头为0,  十进制：0.xx.xx.xx ~ 127.xx.xx.xx     
+Class B: Net_ID开头为10,  十进制：128.xx.xx.xx ~ 191.xx.xx.xx     
+Class C: Net_ID开头为110,  十进制：192.xx.xx.xx ~ 223.xx.xx.xx    
+Class D: Net_ID开头为1110,  十进制：224.xx.xx.xx ~ 239.xx.xx.xx   
+Class E: Net_ID开头为1111,  十进制：240.xx.xx.xx ~ 255.xx.xx.xx      
+Class D 是用来作为组播地址，Class E是没有使用的保留网段。一般系统上面只有A B C三种等级的IP。
+
+#### IP的种类与获取方式
+
+* IP的种类只有两种：
+1. Public IP：公共IP，经由InterNIC所统一规划的IP，也就是常说的公网IP。
+2. Private IP：私有或保留IP，主要用于局域网内的主机连接规划。
+私有IP分别在A、B、C三个class当中各保留一段作为私有IP：
+Class A: 10.0.0.0 ~ 10.255.255.255     
+Class B: 172.16.0.0 ~ 172.31.255.255     
+Class C: 192.168.0.0 ~ 192.168.255.255
+私有IP只能再内部网络使用，若要连接公网需使用NAT(NetWork Address Transfer)服务。
+
+* Loopback IP 网段，127.0.0.0/8 网段，默认的主机localhost的IP 是127.0.0.1
+* IP的获取方式：
+1. 手动配置 static
+2. 通过拨号取得，ISP提供
+3. DHCP
+
+## Netmask、子网与CIDR(Classless Interdomain Routing)
+
+>如何使得网段的分隔粒度更细
+
+
