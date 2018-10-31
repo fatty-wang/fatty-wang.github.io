@@ -107,12 +107,24 @@ MAC是网络接口设备所能处理的主要数据包裹，也是最终被物�
 * Identification(识别码)，由于IP数据包比MAC数据帧的要大，IP数据包需要被分成更小的IP分段后才能塞进MAC数据帧中，Identification用了标明每个小的IP分段是否来自同一个IP包。
 * Flags(特殊字段)，对应内容为“0DM”。D：0代表可以分段，1表示不可分段。M：0代表此IP为最后分段，1表示非最后分段。
 * Fragment Offset(分段偏移)：表示目前这个IP分段在原始IP数据包中所占位置。通过Total Length、Identification、Flags以及Fragment Offset就能够将小的IP分段在接收端组合起来了。
-* Time To Live(TTL，生存时间)：8bit，范围0到255。当这个IP数据包通过一个路由器时，TTL就会减1，当TTL为0时，这个数据包将会被直接丢弃。
-* Protocol Number，传输层和网络层本身的其他数据都是放在IP数据包中，这个字段记录了IP数据包内的数据是什么，如TCP、UDP和ICMP
+* **Time To Live** (TTL，生存时间)：8bit，范围0到255。当这个IP数据包通过一个路由器时，TTL就会减1，当TTL为0时，这个数据包将会被直接丢弃。
+* **Protocol Number** 传输层和网络层本身的其他数据都是放在IP数据包中，这个字段记录了IP数据包内的数据是什么，如TCP、UDP和ICMP
 * Header Checksum(报头校验码)，用于检查IP报头是否错误
-* Source Address(来源IP地址)，32位
-* Destination Address(目的IP地址)
+* **Source Address** (来源IP地址)，32位
+* **Destination Address** (目的IP地址)
 * Options(其他参数)，额外功能，如安全处理机制，路由记录，时间戳，严格与宽松的来源路由等。
 * Padding(补齐)，若Options不足32位时，由Padding主动补齐。
 
 #### IP地址的组成与分级
+
+IP地址是32位，有32个0或者1组成。IP的表示方式：将32bits分成四段，每段8bits并且转换成10机制。所以IP的范围是从 0.0.0.0 ~ 255.255.255.255。
+
+>**32位的IP地址中，可以将32位分为Net_ID(网络号码)和Host_ID(主机号码)两个部分**
+
+* **同一网络**：在同一物理网段内，主机的IP具有相同的Net_ID, 并且具有独特的Host-ID。
+IP在同一网络的意义：
+1. 在同一网段内，Net_ID是不变的，而Host_ID则是不可重复的。而且Host_ID在二进制的表示法中，不可全部为0也不可全部为1。全0表示整个网段地址(Network IP),而全为1则为广播地址(Broadcast IP)。
+2. 主机可以通过CSMA/CD的功能直接在局域网内通过广播进行网络的连接，也就是MAC数据帧。
+3. 即使同一物理网段，主机若不是同一网络，则广播地址不同，需要使用路由器来进行连接。
+4. Host_ID所占用的位数越大，Host_ID则越多，表示同一网络内可用以设定的主机IP数量越多。
+
