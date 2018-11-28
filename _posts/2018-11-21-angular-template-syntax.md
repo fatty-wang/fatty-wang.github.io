@@ -105,7 +105,7 @@ tags:
 <img [src]="heroImgUrl">
 ```
 插值表达式：
-```javascript
+```xml
 <img src="{{heroImageUrl}}">
 ```
 #### 内容安全
