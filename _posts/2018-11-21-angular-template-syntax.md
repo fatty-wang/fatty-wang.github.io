@@ -86,6 +86,7 @@ tags:
 <img bind-src="heroImageUrl">
 ```
 另外一个例子是设置自定义组件的模型属性（这是父子组件之间通信的重要方式）：
+
 ```html
 <app-hero-detail [hero]="currentHero"></app-hero-detail>
 ```
