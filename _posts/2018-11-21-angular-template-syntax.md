@@ -167,8 +167,12 @@ tags:
 
 #### 内置属性型指令
 * 属性型指令会监听和修改其他HTML元素或组件的行为、元素(attribute)、DOM property。
-* NgClass：添加或移除一组CSS类。CSS类绑定是添加或删除单个类的最佳途径。当要同时添加或移除多个CSS类时，NgClass指令是更好的选择。
-* NgClass： ngClass 绑定到一个 key:value 形式的控制对象。这个对象中的每个 key 都是一个 CSS 类名，如果它的 value 是 true，这个类就会被加上，否则就会被移除。
-* NgStyle：样式绑定是设置单一样式值的简单方式，同时设置多个内联样式则应该使用NgStyle。
-* NgStyle：需要绑定到一个 key:value 控制对象。 对象的每个 key 是样式名，它的 value 是能用于这个样式的任何值。
+#### NgClass
+* 添加或移除一组CSS类。CSS类绑定是添加或删除单个类的最佳途径。当要同时添加或移除多个CSS类时，NgClass指令是更好的选择。
+* ngClass 绑定到一个 key:value 形式的控制对象。这个对象中的每个 key 都是一个 CSS 类名，如果它的 value 是 true，这个类就会被加上，否则就会被移除。
+#### NgStyle
+* 样式绑定是设置单一样式值的简单方式，同时设置多个内联样式则应该使用NgStyle。
+* ngStyle 需要绑定到一个 key:value 控制对象。 对象的每个 key 是样式名，它的 value 是能用于这个样式的任何值。
+#### NgModel
+* 使用ngModel指令之前，必须导入FormsModule并把它添加到Angular模块的imports列表中。
 
