@@ -105,9 +105,7 @@ tags:
 <img [src]="heroImgUrl">
 ```
 插值表达式：
-```html
-<img src="\{{heroImageUrl\}}">
-```
+!["插值表达式"](/img/interpolation.png "插值表达式")
 #### 内容安全
 * 不管是插值表达式还是属性绑定，都不会允许带有 script 标签的 HTML 泄漏到浏览器中。
 
@@ -117,6 +115,7 @@ tags:
 * 插值表达式和属性绑定只能设置property，不能设置attribute。
 * 考虑 ARIA， SVG 和 table 中的 colspan/rowspan 等 attribute。 它们是纯粹的 attribute，没有对应的属性可供绑定。
 * attribute绑定的语法和property绑定类似，但方括号中的部分不是元素的property名称，而是有attr前缀，一个点和attribute名字组成。并通过字符串的表达式来设置attribute的值。如下：
+
 ```html
 <tr><td [attr.colspan]="1 + 1">One-Two</td></tr>
 ```
