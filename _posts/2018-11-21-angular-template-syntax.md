@@ -184,3 +184,30 @@ ngModel双向绑定示例如下：
 <input [value]="currentHero.name"
        (input)="currentHero.name=$event.target.value" >
 ```
+ngModel指令通过自己的输入属性ngModel和输出属性ngModelChange隐藏了如下细节：
+```html
+<input
+  [ngModel]="currentHero.name"
+  (ngModelChange)="currentHero.name=$event">
+```
+ngModel输入属性会设置改元素的值，并通过ngModelChange的输出属性来监听元素值的变化。
+*  NgModel 指令只支持实现了ControlValueAccessor的元素， 它们能让元素适配本协议。 \<input> 输入框正是其中之一。 Angular 为所有的基础 HTML 表单都提供了值访问器（Value accessor）。你不能把 [(ngModel)] 用到非表单类的原生元素或第三方自定义组件上，除非写一个合适的值访问器。
+* [(ngModel)] 语法只能设置数据绑定属性。 如果要做更多或者做点不一样的事，也可以写它的展开形式:
+```html
+<input
+  [ngModel]="currentHero.name"
+  (ngModelChange)="setUppercaseName($event)">
+```
+
+#### 内置结构型指令
+
+>结构型指令的职责是HTML布局。塑造或重塑DOM的结构，通过添加、移除和操作它们所附加到的宿主元素来实现的。
+
+#### NgIf
+
+* NgIf 根据条件把一个元素添加到DOM中或从DOM移除。
+* 通过把 *ngIf 应用到宿主元素上，可以往DOM中添加或移除这个元素：
+```html
+<a *ngIf="isActive"></a>
+```
+当isActive表达式返回真时，NgIf把A添加到DOM中，为假时，从DOM中移除A，**并销毁改组件及其所有子组件**。
