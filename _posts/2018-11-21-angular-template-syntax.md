@@ -175,4 +175,12 @@ tags:
 * ngStyle 需要绑定到一个 key:value 控制对象。 对象的每个 key 是样式名，它的 value 是能用于这个样式的任何值。
 #### NgModel
 * 使用ngModel指令之前，必须导入FormsModule并把它添加到Angular模块的imports列表中。
-
+ngModel双向绑定示例如下：
+```html
+<input [(ngModel)]="currentHero.name">
+```
+可以通过分别绑定到 <input> 元素的 value 属性和 input 事件来达到同样的效果:
+```html
+<input [value]="currentHero.name"
+       (input)="currentHero.name=$event.target.value" >
+```
