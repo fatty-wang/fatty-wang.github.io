@@ -179,7 +179,7 @@ ngModel双向绑定示例如下：
 ```html
 <input [(ngModel)]="currentHero.name">
 ```
-可以通过分别绑定到 <input> 元素的 value 属性和 input 事件来达到同样的效果:
+可以通过分别绑定到 \<input> 元素的 value 属性和 input 事件来达到同样的效果:
 ```html
 <input [value]="currentHero.name"
        (input)="currentHero.name=$event.target.value" >
