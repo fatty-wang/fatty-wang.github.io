@@ -165,7 +165,7 @@ tags:
 
 >内置指令可以分为属性型指令和结构型指令。
 
-#### 内置属性型指令
+#### 内置属性型指令 ( ***[]*** )
 * 属性型指令会监听和修改其他HTML元素或组件的行为、元素(attribute)、DOM property。
 #### NgClass
 * 添加或移除一组CSS类。CSS类绑定是添加或删除单个类的最佳途径。当要同时添加或移除多个CSS类时，NgClass指令是更好的选择。
@@ -199,7 +199,7 @@ ngModel输入属性会设置改元素的值，并通过ngModelChange的输出属
   (ngModelChange)="setUppercaseName($event)">
 ```
 
-#### 内置结构型指令
+#### 内置结构型指令 ( ****ng*** )
 
 >结构型指令的职责是HTML布局。塑造或重塑DOM的结构，通过添加、移除和操作它们所附加到的宿主元素来实现的。
 
@@ -211,3 +211,62 @@ ngModel输入属性会设置改元素的值，并通过ngModelChange的输出属
 <a *ngIf="isActive"></a>
 ```
 当isActive表达式返回真时，NgIf把A添加到DOM中，为假时，从DOM中移除A，**并销毁改组件及其所有子组件**。
+
+* 这和通过CSS方式将一个元素显示或隐藏不一样。隐藏是，元素仍然在DOM中，子树中的组件及其状态仍然保留着，及时对于不可见属性，Angular也会继续检查变更。子树可能占用相当可观的内存和运算资源。而销毁是物理地移除了这个元素子树，释放了相关资源。
+
+* NgIf可以用来防范空指针错误
+
+#### NgForOf
+
+* NgFor 是一个重复器指令，用来展示一个由多个条目组成的列表。
+```html
+<app-hero-detail *ngFor="let hero of heroes" [hero]="hero"></app-hero-detail>
+```
+*ngFor等号后面的字符串是Angualr自己解释的小型语言：微语法。
+
+#### 模板输入变量
+
+* 上述例子中：hero前的**let关键字**创建了一个hero的**模板输入变量**，ngFor指令在由父组件的heros属性返回的数组上进行迭代，每次迭代把数组中的当前元素复制给hero变量。可以在ngFor的宿主元素及其子元素上使用模板输入变量hero，从而访问相关属性
+
+#### *ngFor中的索引
+
+* NgFor指令上下文中的index属性返回一个从零开始的索引，表示当前条目在迭代中的顺序。可以通过模板输入变量(let关键字)获取这个index值。
+
+#### *ngFor中的trackBy
+
+* trackBy用来指示NgFor应该追踪的值。从而避免整个列表的全部重建。
+
+#### NgSwitch指令
+
+* 从多个可能的元素中根据switch条件来显示某一个元素，angular只会把选中的元素放假DOM中。
+* NgSwitch实际上是：NgSwitch、NgSwitchCasse和NgSwitchDefault三个指令的相互协作。NgSwitch 是主控指令，要把它绑定到一个返回候选值的表达式。这个候选值可以是任意类型。绑定到 [ngSwitch]。如果试图用 *ngSwitch 的形式使用它就会报错，这是因为 NgSwitch 是一个属性型指令，而不是结构型指令。 它要修改的是所在元素的行为，而不会直接接触 DOM 结构。绑定到 *ngSwitchCase 和 *ngSwitchDefault NgSwitchCase 和 NgSwitchDefault 指令都是结构型指令，因为它们会从 DOM 中添加或移除元素。
+
+## 模板引用变量 ( ***#var*** )
+
+* 模板引用变量用来引用模板中的某个DOM元素，Angular组件或指令或Web Component。使用井号(#)来声明引用变量。如下：
+```html
+<input #phone placeholder="phone number">
+```
+可以在模板中的任何地方引用模板引用变量。
+* 模板引用变量和*ngFor部分看到过的模板输入变量是不同的。模板引用变量的作用范围是整个模板。 不要在同一个模板中多次定义同一个变量名，否则它在运行期间的值是无法确定的。你也可以用ref-前缀代替#.
+
+## 输入和输出属性
+* 输入属性是一个带有@Input装饰器的可设置属性。当它通过属性绑定的形式被绑定时，值会“流入”这个属性。
+* 输出属性是一个带有@Output装饰器的**可观察对象型**的属性。这个属性几乎总是返回Angular的EventEmitter。当它通过事件绑定的形式被绑定时，值会“流出”这个属性。
+> 所有组件都是指令。
+* 可以在组件自己的模板中绑定组件类的公共属性，而不用管它们是不是输入属性或输出属性。组件类和模板合起来构成组件。
+* 当绑定其他组件的属性时，需要使用@Input和@Output装饰器**显示声明**这个属性时输入属性或输出属性。
+```TypeScript
+@Input()  hero: Hero;
+@Output() deleteRequest = new EventEmitter<Hero>();
+```
+也可以在指令元数据的inputs或outputs数组中标记处这些成员。
+```TypeScript
+@Component({
+  inputs: ['hero'],
+  outputs: ['deleteRequest'],
+})
+```
+* 输入属性通常接收数据值，输出属性暴露事件生产者，如EventEmitter对象。输入和输出这两个词是从目标指令的角度来说的。
+
+
