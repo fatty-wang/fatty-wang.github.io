@@ -222,8 +222,7 @@ ngModel输入属性会设置改元素的值，并通过ngModelChange的输出属
 ```html
 <app-hero-detail *ngFor="let hero of heroes" [hero]="hero"></app-hero-detail>
 ```
-
-*ngFor等号后面的字符串是Angualr自己解释的小型语言：微语法。
+* ngFor等号后面的字符串是Angualr自己解释的小型语言：微语法。
 
 #### 模板输入变量
 

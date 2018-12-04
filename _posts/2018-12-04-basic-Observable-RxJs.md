@@ -154,7 +154,7 @@ RxJS提供了一些用来创建可观察对象的函数：
 #### 操作符(Operators)
 
 操作符是基于可观察对象构建的一些对集合进行复杂操作的函数。操作符接受一些配置项，然后返回一个以可观察对象为参数的函数。当执行这个返回的函数时，这个操作符会观察可观察对象中发出的值，转换它们，并返回**由转换后的值组成的新的可观察对象**。下面是一个操作组map()的例子：
-```html
+```TypeScriptGGggG
 import { map } from 'rxjs/operators';
 
 const nums = of(1, 2, 3);
@@ -170,3 +170,69 @@ squaredNums.subscribe(x => console.log(x));
 // 9
 ```
 上面例子中，操作符map将可观察对象nums流出的值，转换为改值的平方。
+
+#### 管道
+管道可以把多个操作符返回的函数组成一个。pipe()函数你要组合的操作符为函数，并返回一个新的函数，当执行这个新函数时，就会顺序执行那些被组合进去的操作符函数。下面这个例子中pipe()函数将filter和map两个操作符函数组合起来：
+```TypeScript
+import { filter, map } from 'rxjs/operators';
+const nums = of(1, 2, 3, 4, 5);
+// pipe接收的参数为操作符，pipe函数返回的函数 仍然将可观察对象作为参数.
+const squareOddVals = pipe(
+  filter((n: number) => n % 2 !== 0),
+  map(n => n * n)
+);
+// squareOddVals函数仍然返回一个可观察对象，并且该可观察对象在subscribe时，流出的值会依次进行filte和map
+const squareOdd = squareOddVals(nums);
+
+squareOdd.subscribe(x => console.log(x));
+```
+pipe()函数同时也是RxJS中Observable上的一个方法，所以可以如下简写：
+```TypeScript
+import { filter, map } from 'rxjs/operators';
+
+const squareOdd = of(1, 2, 3, 4, 5)
+  .pipe(
+    filter(n => n % 2 !== 0),
+    map(n => n * n)
+  );
+
+// Subscribe to get values
+squareOdd.subscribe(x => console.log(x));
+```
+#### 常用操作符
+1. 创建：from,fromPromise,fromEvent,of
+2. 组合：combineLatest, concat, merge, startWith , withLatestFrom, zip
+3. 过滤：debounceTime, distinctUntilChanged, filter, take, takeUntil
+4. 转换：bufferTime, concatMap, map, mergeMap, scan, switchMap
+5. 工具：tap
+6. 多播：share
+
+#### 错误处理
+
+RxJS提供了catchError操作符，它允许你在管道中处理已知错误。如果捕获这个错误并提供一个默认值，流就会处理这些值，而不会报错。如下所示：
+```TypeScript
+import { ajax } from 'rxjs/ajax';
+import { map, catchError } from 'rxjs/operators';
+// Return "response" from the API. If an error happens,
+// return an empty array.
+const apiData = ajax('/api/data').pipe(
+  map(res => {
+    if (!res.response) {
+      throw new Error('Value expected!');
+    }
+    return res.response;
+  }),
+  catchError(err => of([]))
+);
+
+apiData.subscribe({
+  next(x) { console.log('data: ', x); },
+  error(err) { console.log('errors already caught... will not run'); }
+});
+```
+#### 重试失败的可观察对象
+retry操作符可以重新尝试失败的请求。可以在catchError之前使用retry操作符。它会订阅原始的可观察对象，重新运行导致结果出错的动作序列。如果其中包含HTTP请求，就会重新发起那个HTTP请求。
+
+#### 可观察对象的命名约定
+
+* Angular中可观察对象的名字以 **“$”** 符号结尾。如果需要用某个属性来存储来自可观察对象的最近一个值，它的命名惯例是与可观察对象同名，但不带“$”后缀。
