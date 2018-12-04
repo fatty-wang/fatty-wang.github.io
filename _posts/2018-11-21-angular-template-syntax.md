@@ -219,6 +219,7 @@ ngModel输入属性会设置改元素的值，并通过ngModelChange的输出属
 #### NgForOf
 
 * NgFor 是一个重复器指令，用来展示一个由多个条目组成的列表。
+
 ```html
 <app-hero-detail *ngFor="let hero of heroes" [hero]="hero"></app-hero-detail>
 ```
@@ -244,9 +245,11 @@ ngModel输入属性会设置改元素的值，并通过ngModelChange的输出属
 ## 模板引用变量 ( ***#var*** )
 
 * 模板引用变量用来引用模板中的某个DOM元素，Angular组件或指令或Web Component。使用井号(#)来声明引用变量。如下：
+
 ```html
 <input #phone placeholder="phone number">
-```
+```   
+
 可以在模板中的任何地方引用模板引用变量。
 * 模板引用变量和*ngFor部分看到过的模板输入变量是不同的。模板引用变量的作用范围是整个模板。 不要在同一个模板中多次定义同一个变量名，否则它在运行期间的值是无法确定的。你也可以用ref-前缀代替#.
 
