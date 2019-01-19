@@ -26,5 +26,28 @@ tags:
 
 
 * 普通字符：可打印字符和不可打印字符。可打印字符：所有大小写字符、所有数字、所有标点符号和一些其他字符。不可打印字符如下图所示：
-
 !["不可打印字符"](/img/regular-expression/print-char.png "不可打印字符")
+
+#### 元字符
+
+* 正则表达式有多种不同的风格。下面介绍的是PCRE（Perl兼容正则表达式，Perl Compatible Regular Expressions，一个由Philip Hazel开发的，为很多现代工具所使用的库）适用于Perl或者Python编程语言。（grep或者egrep的正则表达式文法是PCRE的子集）
+
+**数量限定符 6个**  指定正则表达式的一个给定组件必须要出现多少次才能满足匹配。
+!["数量限定符"](/img/regular-expression/numlimit.png "数量限定符")
+
+**定位符4个**  将正则表达式固定到行首或行尾，或描述字符串或单词的边界。
+!["定位符"](/img/regular-expression/location.png "定位符")
+
+**字符集合 []**  []内不论有几个字符，它都只代表一个字符。
+!["字符集合"](/img/regular-expression/charset.png "字符集合")
+
+**子表达式(pattern)**
+**向后引用：** (pattern)将相关匹配存储到一个临时缓冲区中，所捕获的每个子匹配都按照在正则表达式模式中从左到右出现的顺序存储。缓冲区编号从 1 开始，最多可存储 99 个捕获的子表达式。每个缓冲区都可以使用 \n 访问，其中 n 为一个标识特定缓冲区的一位或两位十进制数。
+!["子表达式"](/img/regular-expression/subexpression.png "子表达式")
+
+**其他元字符：**
+!["其他元字符"](/img/regular-expression/other.png "其他元字符")
+
+**运算符优先级**
+!["优先级"](/img/regular-expression/priority.png "优先级")
+
