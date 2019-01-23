@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "JavaScript拾遗"
-date: 2019-11-01 
+date: 2018-11-01 
 author: "WangX"
 catalog: true
 header-style: text
@@ -96,5 +96,21 @@ string';
 * 对象采用大括号表示，这导致了一个问题：如果行首是一个大括号，它到底是表达式还是语句？ JavaScript 引擎的做法是，如果遇到这种情况，无法确定是对象还是代码块，一律解释为代码块。
 * 对象属性的读取和赋值，有两种方法，一种是使用点运算符，还有一种是使用方括号运算符。如果使用方括号运算符，键名必须放在引号里面。
 * Object.keys(obj)可以查看obj的所有key。
-* delete命令
+* delete命令用于删除对象的属性，删除成功后返回true。
+```javascript
+var obj = { p: 1 };
+Object.keys(obj) // ["p"]
+
+delete obj.p // true
+obj.p // undefined
+Object.keys(obj) // []
+```
+注意，删除一个不存在的属性，delete不报错，而且返回true。
+```javascript
+var obj = {};
+delete obj.p //true
+```
+只有一种情况，delete命令会返回false，那就是该属性存在，且不得删除。
+* delete只能删除对象本身的属性，无法删除继承的属性。
+
 
