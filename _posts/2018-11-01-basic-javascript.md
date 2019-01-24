@@ -147,7 +147,7 @@ var print = function(s) {
 var f = function f() {};
 }
 ```
-3. Function构造函数。 Function构造函数接受三个参数，除了最后一个参数是函数的“函数体”，其他参数都是函数的参数。只有最后一个参数会被当做函数体，如果只有一个参数，该参数就是函数体。
+3. Function构造函数。 Function构造函数接受三个参数，除了最后一个参数是函数的“函数体”，其他参数都是函数的参数。只有最后一个参数会被当做函数体，如果只有一个参数，该参数就是函数体。   
 ```javascript
 var add = new Function(
   'x',
@@ -165,13 +165,13 @@ function add(x, y) {
 * 如果同一个函数被多次声明，后面的声明就会覆盖前面的声明。
 * JavaScript将函数为第一等公民，与其他数据类型相等。
 * JavaScript 引擎将函数名视同变量名，所以采用function命令声明函数时，整个函数会像变量声明一样，被提升到代码头部。所以，下面的代码不会报错。
-* 但是如果采用赋值语句定义函数，如下：
+* 但是如果采用赋值语句定义函数，如下：  
 ```javascript
 f();
 var f = function (){};
 // TypeError: undefined is not a function
 }
-```
+```   
 上面的代码等同于：
 ```javascript
 var f;
@@ -180,7 +180,7 @@ f = function () {};
 ```
 上面代码第二行，调用f的时候，f只是被声明了，还没有被赋值，等于undefined，所以会报错。
 
-* 如果同时采用function命令和赋值语句声明同一个函数，最后总是采用赋值语句的定义。
+* 如果同时采用function命令和赋值语句声明同一个函数，最后总是采用赋值语句的定义。    
 ```javascript
 var f = function () {
   console.log('1');
@@ -191,7 +191,7 @@ function f() {
 }
 
 f() // 1
-```
+```      
 
 * 函数name属性返回函数的名字。函数的length属性返回函数**预期**传入的参数个数。toString()方法返回函数的源码。
 
@@ -213,7 +213,7 @@ f() // 1
 ```javascript
 var arr = [1,2,3];
 arr.0 //SyntaxError
-```
+```    
 * 数组的length属性，返回数组的成员数量。length属性是可写的。如果人为设置一个小于当前成员个数的值，该数组的成员会自动减少到length设置的值。
 ```javascript
 var arr = [ 'a', 'b', 'c' ];
