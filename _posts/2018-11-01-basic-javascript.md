@@ -211,12 +211,12 @@ f() // 1
 ```javascript
 var arr = [1,2,3];
 arr.0 //SyntaxError
-```    
+```     
+
 * 数组的length属性，返回数组的成员数量。length属性是可写的。如果人为设置一个小于当前成员个数的值，该数组的成员会自动减少到length设置的值。
 ```javascript
 var arr = [ 'a', 'b', 'c' ];
 arr.length // 3
-
 arr.length = 2;
 arr // ["a", "b"]
 ```
