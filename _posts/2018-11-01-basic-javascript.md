@@ -153,9 +153,7 @@ var add = new Function(
   'x',
   'y',
   'return x + y'
-);
-
-// 等同于
+); // 等同于
 function add(x, y) {
   return x + y;
 }
