@@ -244,7 +244,7 @@ v1 === v2; //true
 #### 其他运算符
 * void运算符的作用是执行一个表达式，然后不返回任何值，或者说返回undefined。
 * 逗号运算符用于对两个表达式求值，并返回后一个表达式的值。
-```javasript
+```javascript
 'a', 'b' // "b"
 var x = 0;
 var y = (x++, 10);
@@ -321,7 +321,8 @@ var result = f();
 * 下面三种情况，语法规定本来就不需要在结尾添加分号：
 1.  for 和 while循环
 2. 分支语句：if, switch, try
-3. 函数的声明语句
+3. 函数的声明语句   
+
 ```javascript
 for (;;){
 }  //no need
@@ -342,6 +343,7 @@ try {
 function f() {
 } //no need
 ```
+
 上面几种语句如果使用分号，并不会出错，解释引擎会把分号解释为空语句。
 * do..while 循环需要分号，函数表达式仍然需要分号。
 ```javascript
