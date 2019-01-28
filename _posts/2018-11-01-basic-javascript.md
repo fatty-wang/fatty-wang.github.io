@@ -99,11 +99,10 @@ string';
 * delete命令用于删除对象的属性，删除成功后返回true。   
 ```javascript
 var obj = { p: 1 };
-Object.keys(obj) // ["p"]
-
-delete obj.p // true
-obj.p // undefined
-Object.keys(obj) // []
+Object.keys(obj) 的值为 ["p"]
+delete obj.p  返回true
+obj.p    delete之后为 undefined
+Object.keys(obj) 的值为 []
 ```     
 
 注意，删除一个不存在的属性，delete不报错，而且返回true。    
