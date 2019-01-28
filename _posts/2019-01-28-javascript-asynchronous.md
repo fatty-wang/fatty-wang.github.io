@@ -53,10 +53,10 @@ var obj = {
         console.log(this.x);
     }
 };
-
 setTimeout(obj.y,1000);
-```
-上面代码的输出为1，而不是2。因为当obj.y在1000毫秒后运行时this所指向的已经不是obj了，而是全局环境。可以将obj.y放入匿名函数中，obj.y将在obj的作用域执行。或者使用bind方法，将obj.y绑定到obj上面。
+```   
+上面代码的输出为1，而不是2。因为当obj.y在1000毫秒后运行时this所指向的已经不是obj了，而是全局环境。可以将obj.y放入匿名函数中，obj.y将在obj的作用域执行。或者使用bind方法，将obj.y绑定到obj上面。    
+
 ```javascript
 setTimeout(function () {
     obj.y();
@@ -94,3 +94,18 @@ $('textarea').on('keydown',debounce(ajaxAction,2500));
 * setTimeout和setInterval的运行机制，是将指定的代码移出本轮事件循环，等到下一轮事件循环，再检查是否到了指定时间。如果到了，就执行对应的代码；如果不到，就继续等待。
 * setTimeout和setInterval指定的回调函数，必须等到本轮事件循环的所有同步任务都执行完，才会开始执行。由于前面的任务到底需要多少时间执行完，是不确定的，所以没有办法保证，setTimeout和setInterval指定的任务，一定会按照预定时间执行。
 * setTimeout(f, 0)会在下一轮事件循环一开始就执行。
+
+## Promise
+> Promise是异步编程的一种方案，优于回调函数和事件驱动，最早由社区提出和实现，ES6将其写进了语言标准，统一了用法，原生提供了Promise对象。
+
+* Promise对象中保存着某个未来才会结束的事件(通常是一个异步操作)的结果。Promise对象的两个特点：
+1. Promise对象代表的异步操作有三种状态：pending（进行中）、fulfilled（已成功）和rejected（已失败）。只有异步操作的结果可以决定当前是哪一种状态，任何其他操作都无法改变这个状态。
+2. 一旦状态改变，就不会再变，**任何时候都可以得到这个结果**。Promise对象的状态改变，只有两种情况：从pending变为fulfilled和从pending到变为rejected。只要这两种情况发生，就不会再变，称为resolved（已定型）。
+* **如果状态已经发送改变，再对Promise添加回调函数，也会立即得到这个结果，这与Event完全不同，如果错过Event的发生，再去监听是不会得到结果**。
+* Promise缺点：
+1. Promise无法取消，一旦新建就会立即执行，无法中途取消。
+2. 如果不设置回调函数，Promise内部抛出错误、不会反应到外部。
+3. 当处于Pending状态是，无法得知目前是刚刚开始，还是即将完成。
+
+#### 基本用法
+* ES6中，Promise对象是一个构造函数，用来生成Promise实例。
