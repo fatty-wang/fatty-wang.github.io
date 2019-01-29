@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Javascript中的异步"
-date: 2019-01-19 
+date: 2019-01-28 
 author: "WangX"
 catalog: true
 header-style: text
@@ -160,7 +160,7 @@ console.log('Hi!');
 上述代码中，Promise新建后立即执行，最先输出'Promise'，**then方法中指定的回调函数，将在当前脚本所有同步任务执行完再执行**，所以第二输出的是'Hi!'，最后输出的是'resolved'。
 
 *传递给**resolve函数**的参数除了正常值外，还可以是另外一个Promise实例。**这时p1的状态就会传递给p2，也就是说，p1的状态决定了p2的状态。** 如下：    
- 
+
 ```javascript
 const p1 = new Promise(function (resolve, reject) {
   // ...
