@@ -120,4 +120,28 @@ const promise = new Promise(function(resolve, reject) {
     reject(error);
   }
 });
-```
+```    
+
+* Promise实例生成后，可以用then方法分别指定resolved状态和rejected状态的回调函数。then方法接收两个回调函数作为参数。第一个回调函数为状态变为fulfilled时调用，第二回调函数为状态变为rejected时调用。其中第二个回调函数是**可选的**，这两个回调函数都接受**Promise对象传出的值作为参数**。      
+```javascript
+promise.then(function(value){
+    //success
+},fucntion(error){
+    //failure
+});
+```   
+下面为一个Promise对象例子：     
+```javascript
+function timeout(ms){
+    return new Promise((resolve,reject)=>{
+        setTimeout(resolve,ms,'done');
+    });
+}
+timeout(1000).then((value)=>{
+    console.log(value);
+});
+```     
+上述例子中:timeout函数接收一个毫秒数作为参数，返回一个Promise实例，Promise实例接收一个函数为参数。该函数中定义了resolve函数异步触发，并且给resolve函数传递参数'done'。then方法中只要一个参数，作为resolve函数触发后的回调函数，改回调函数打印异步操作的结果，也就是'done'。
+
+
+
