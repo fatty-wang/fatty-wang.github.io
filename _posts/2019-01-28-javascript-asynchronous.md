@@ -141,7 +141,78 @@ timeout(1000).then((value)=>{
     console.log(value);
 });
 ```     
-上述例子中:timeout函数接收一个毫秒数作为参数，返回一个Promise实例，Promise实例接收一个函数为参数。该函数中定义了resolve函数异步触发，并且给resolve函数传递参数'done'。then方法中只要一个参数，作为resolve函数触发后的回调函数，改回调函数打印异步操作的结果，也就是'done'。
+上述例子中:timeout函数接收一个毫秒数作为参数，返回一个Promise实例，Promise实例接收一个函数为参数。该函数中定义了resolve函数异步触发，并且给resolve函数传递参数'done'。**如果调用resolve函数和reject函数时带有参数，那么它们的参数会被传递给回调函数**。then方法中只有一个参数，作为resolve函数触发后的回调函数，该回调函数打印'done'。
+* Promise新建后会立即执行。     
+```javascript
+let promise = new Promise(function(resolve, reject) {
+  console.log('Promise');
+  resolve();
+});
 
+promise.then(function() {
+  console.log('resolved.');
+});
+
+console.log('Hi!');
+```    
+上述代码中，Promise新建后立即执行，最先输出'Promise'，**then方法中指定的回调函数，将在当前脚本所有同步任务执行完再执行**，所以第二输出的是'Hi!'，最后输出的是'resolved'。
+
+*传递给**resolve函数**的参数除了正常值外，还可以是另外一个Promise实例。**这时p1的状态就会传递给p2，也就是说，p1的状态决定了p2的状态。** 如下：     
+```javascript
+const p1 = new Promise(function (resolve, reject) {
+  // ...
+});
+
+const p2 = new Promise(function (resolve, reject) {
+  // ...
+  resolve(p1);
+})
+```     
+* resolve或reject的调用并不会终结Promise的参数函数的执行。     
+```javascript
+new Promise((resolve, reject) => {
+  resolve(1);
+  // return resolve(1);
+  console.log(2);
+}).then(r => {
+  console.log(r);
+});
+```     
+调用resolve(1)后，console.log(2)还是会执行，并且首先打印出来。这是因为丽姐resolved的Promise是在本轮事件循环的末尾执行，总是晚于本轮循环的同步任务。最好在前面加上return语句。
+
+#### Promise.prototype.then(onFulfilled, onRejected)
+
+* then方法时定义在Promise.prototype上的，then方法也返回一个**新的**Promise实例，因此可以采用**链式写法**，也就是then方法后面再调用另一个then方法。下面代码中，第一个回调函数完成后，会将返回结果作为参数，传入第二个回调函数。        
+```javascript
+getJSON("/posts.json").then(function(json) {
+  return json.post;
+}).then(function(post) {
+});
+```     
+#### Promise.prototype.catch()
+
+* Promise.prototype.catch方法是.then(null,rejection)或.then(undefined,rejection)的别名，用于指定发生错误时的回调函数。     
+```javascript
+getJSON('/posts.json').then(function(posts) {
+  // ...
+}).catch(function(error) {
+  // 处理 getJSON 和 前一个回调函数运行时发生的错误
+  console.log('发生错误！', error);
+});
+```    
+上述代码中getJSON返回一个Promise对象。如果对象状态从pending变为fulfilled则会调用then方法中指定的回调函数；如果变为rejected就会调用catch方法指定的回调函数。**then方法指定的回调函数在运行中***抛出***错误，也会被catch方法捕获**。
+
+* reject方法的作用等同于抛出错误！
+* Promise 对象的错误具有“冒泡”性质，会一直向后传递，直到被捕获为止。也就是说，错误总是会被下一个catch语句捕获。      
+```javascript
+getJSON('/post/1.json').then(function(post) {
+  return getJSON(post.commentURL);
+}).then(function(comments) {
+  // some code
+}).catch(function(error) {
+  // 处理前面三个Promise产生的错误
+});
+```   
+上面代码中共有三个Promise对象，一个由getJSON生成，两个有then生成，任何一处抛出错误或reject都会由最后一个catch捕获。般来说，不要在then方法里面定义 Reject 状态的回调函数（即then的第二个参数），总是使用catch方法。
 
 
