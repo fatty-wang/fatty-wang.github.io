@@ -142,7 +142,9 @@ timeout(1000).then((value)=>{
 });
 ```     
 上述例子中:timeout函数接收一个毫秒数作为参数，返回一个Promise实例，Promise实例接收一个函数为参数。该函数中定义了resolve函数异步触发，并且给resolve函数传递参数'done'。**如果调用resolve函数和reject函数时带有参数，那么它们的参数会被传递给回调函数**。then方法中只有一个参数，作为resolve函数触发后的回调函数，该回调函数打印'done'。
+
 * Promise新建后会立即执行。     
+
 ```javascript
 let promise = new Promise(function(resolve, reject) {
   console.log('Promise');
@@ -157,7 +159,8 @@ console.log('Hi!');
 ```    
 上述代码中，Promise新建后立即执行，最先输出'Promise'，**then方法中指定的回调函数，将在当前脚本所有同步任务执行完再执行**，所以第二输出的是'Hi!'，最后输出的是'resolved'。
 
-*传递给**resolve函数**的参数除了正常值外，还可以是另外一个Promise实例。**这时p1的状态就会传递给p2，也就是说，p1的状态决定了p2的状态。** 如下：     
+*传递给**resolve函数**的参数除了正常值外，还可以是另外一个Promise实例。**这时p1的状态就会传递给p2，也就是说，p1的状态决定了p2的状态。** 如下：    
+ 
 ```javascript
 const p1 = new Promise(function (resolve, reject) {
   // ...
@@ -178,7 +181,7 @@ new Promise((resolve, reject) => {
   console.log(r);
 });
 ```     
-调用resolve(1)后，console.log(2)还是会执行，并且首先打印出来。这是因为丽姐resolved的Promise是在本轮事件循环的末尾执行，总是晚于本轮循环的同步任务。最好在前面加上return语句。
+调用resolve(1)后，console.log(2)还是会执行，并且首先打印出来。这是因为立即resolved的Promise是在本轮事件循环的末尾执行，总是晚于本轮循环的同步任务。最好在前面加上return语句。
 
 #### Promise.prototype.then(onFulfilled, onRejected)
 
@@ -189,7 +192,7 @@ getJSON("/posts.json").then(function(json) {
 }).then(function(post) {
 });
 ```     
-#### Promise.prototype.catch()
+#### Promise.prototype.catch(onRejected)
 
 * Promise.prototype.catch方法是.then(null,rejection)或.then(undefined,rejection)的别名，用于指定发生错误时的回调函数。     
 ```javascript
@@ -213,6 +216,32 @@ getJSON('/post/1.json').then(function(post) {
   // 处理前面三个Promise产生的错误
 });
 ```   
-上面代码中共有三个Promise对象，一个由getJSON生成，两个有then生成，任何一处抛出错误或reject都会由最后一个catch捕获。般来说，不要在then方法里面定义 Reject 状态的回调函数（即then的第二个参数），总是使用catch方法。
+上面代码中共有三个Promise对象，一个由getJSON生成，两个有then生成，任何一处抛出错误或reject都会由最后一个catch捕获。般来说，不要在then方法里面定义 Reject 状态的回调函数（即then的第二个参数），总是使用catch方法。       
+```javascript
+promise
+  .then(function(data) { //cb
+    // success
+  })
+  .catch(function(err) {
+    // error
+  });
+```     
+上面写法中的catch既能捕捉到promise中的rejected，也能捕捉到then中执行中的错误。catch方法返回的还是一个 Promise 对象。
 
+#### Promise.prototype.finally(onFinally)     
+* finally() 方法返回一个Promise，在promise执行结束时，无论结果是fulfilled或者是rejected，在执行then()和catch()后，都会执行finally指定的回调函数。这为指定执行完promise后，无论结果是fulfilled还是rejected都需要执行的代码提供了一种方式，避免同样的语句需要在then()和catch()中各写一次的情况。
+* onFinally为Promise 状态改变后执行的回调函数，不接受任何参数，这意味着没有办法知道，前面的 Promise 状态到底是fulfilled还是rejected。
+* finally本质上是then方法的特例。
+
+#### Promise.all(iterable)
+* Promise.all方法用于将多个 Promise 实例，包装成一个新的 Promise 实例。在 iterable 参数内的多个实例全部变成fulfilled，新实例的状态才会变成fulfilled。有一个被rejected，新实例的状态就是rejected，此时第一个被reject的实例返回值，会传递出来。
+
+#### Promise.race(iterable)
+* Promise.race(iterable) 方法返回一个 promise，一旦迭代器中的某个promise解决或拒绝，返回的 promise就会解决或拒绝。
+
+#### Promise.resolve(value)
+* Promise.resolve(value)方法返回一个以给定值解析后的Promise 对象。但如果这个值是个thenable（即带有then方法），返回的promise会“跟随”这个thenable的对象，采用它的最终状态；如果传入的value本身就是promise对象，则该对象作为Promise.resolve方法的返回值返回；否则以该值为成功状态返回promise对象。
+
+#### Promise.reject(reason)
+* Promise.reject(reason)方法返回一个带有拒绝原因reason参数的Promise对象。
 
