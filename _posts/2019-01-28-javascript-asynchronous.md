@@ -108,4 +108,16 @@ $('textarea').on('keydown',debounce(ajaxAction,2500));
 3. 当处于Pending状态是，无法得知目前是刚刚开始，还是即将完成。
 
 #### 基本用法
-* ES6中，Promise对象是一个构造函数，用来生成Promise实例。
+* ES6中，Promise对象是一个构造函数，用来生成Promise实例。Promise构造函数接收一个**函数**作为参数，该函数的**两个参数**分别是resolve和reject这个**两个函数**(由JavaScript引擎提供)。
+1. resolve函数将Promise对象状态从pending变为fulfilled，在异步操作成功时调用，并**异步操作的结果，作为参数传递出去**;
+2. reject函数将Promise对象状态从pending到变为rejected，在异步操作失败时调用,并将**异步操作报出的错误，作为参数传递出去**。     
+```javascript
+const promise = new Promise(function(resolve, reject) {
+  // ... some code
+  if (/* 异步操作成功 */){
+    resolve(value);
+  } else {
+    reject(error);
+  }
+});
+```
