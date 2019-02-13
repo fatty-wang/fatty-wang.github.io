@@ -10,7 +10,8 @@ tags:
 ---
 
 ## 对象
->JavaScript中的对象是可变的键控集合(key collections)。
+>JavaScript中的对象是可变的键控集合(key collections)。    
+
 * 对象是一个容器，封装了property和method。property是对象的状态，method是对象的行为。
 * JavaScript 语言的对象体系，不是基于“类”的，而是基于构造函数（constructor）和原型链（prototype）。
 #### 构造函数
@@ -37,14 +38,14 @@ var car = new Car(100);
 * 构造函数内部的this**指向新生成的对象**，所有针对this的操作，都会发生在这个空对象上。
 * 构造函数就是操作一个空对象（this对象），将其“构造”为需要的样子。
 * 如果构造函数内部有return语句，而且return后面跟着一个对象，new命令会返回return语句指定的对象；否则，就会不管return语句，返回this对象。   
+
 ```javascript
 var Vehicle = function (){
   this.price = 1000;
   return { price: 2000 };
 };
 
-(new Vehicle()).price
-// 200
+(new Vehicle()).price // 200
 ```
 * 如果对普通函数（内部没有this关键字的函数）使用new命令，则会返回一个空对象。
 * 函数内部可以使用new.target属性。如果当前函数是new命令调用，new.target指向当前函数，否则为undefined。使用这个属性可以判断函数调用的时候，是否是使用new命令。 
@@ -54,7 +55,6 @@ function f() {
   if (!new.target) {
     throw new Error('请使用 new 命令调用！');
   }
-  // ...
 }
 
 f() // Uncaught Error: 请使用 new 命令调用！
@@ -77,11 +77,9 @@ var obj = {
   x: 2,
 };
 
-// 单独执行
-f() // 1
+f() // 1  单独执行
 
-// obj 环境执行
-obj.f() // 2
+obj.f() // 2  obj 环境执行
 ```
 上述代码中，函数f在全局环境执行，this.x指向全局环境的x；在obj环境执行，this.x指向obj.x。
 ## 不通场景中的this
@@ -100,6 +98,7 @@ this === window //true
 #### 方法调用模式
 >当一个函数被保存为对象的一个属性时，称之为一个方法。
 * 如果对象的方法里面包含this，this的指向就是方法运行时所在的对象。该方法赋值给另一个对象，就会改变this的指向。下面代码中，obj.foo方法执行时，this指向obj。    
+
 ```javascript
 var obj ={
   foo: function () {
@@ -110,6 +109,7 @@ var obj ={
 obj.foo() // obj
 ```        
 * 下面代码中obj.foo就是一个值。调用时运行环境已经不是obj了，而是全局环境，所以this不再指向obj，而是window。     
+
 ```javascript
 (obj.foo = obj.foo)() // window 和下面等价
 
@@ -129,6 +129,7 @@ obj.foo() // obj
 >call() 方法**调用**一个函数, 其具有一个指定的this值和分别地提供的参数(参数的列表)。
 
 * 函数实例的call方法，可以指定函数内部this的指向（即函数执行时所在的作用域），然后在所指定的作用域中，调用该函数。    
+
 ```javascript
 var obj = {};
 
@@ -142,6 +143,7 @@ f.call(obj) === obj // true
 * 上面代码中，全局环境运行函数f时，this指向全局环境（浏览器为window对象）；call方法可以改变this的指向，指定this指向对象obj，然后在对象obj的作用域中运行函数f。
 * call方法的参数，应该是一个对象。如果参数为空、null和undefined，则默认传入全局对象。如果call方法的参数是一个原始值，那么这个原始值会自动转成对应的包装对象，然后传入call方法。
 * call的第一个参数就是this所要指向的那个对象，后面的参数则是函数调用时所需的参数。      
+
 ```javascript
 function add(a, b) {
   return a + b;
@@ -155,4 +157,7 @@ add.call(this, 1, 2) //
 #### Function.prototype.bind(thisArg[, arg1[, arg2[, ...]]]) 
 
 * bind方法用于将函数体内的this绑定到某个对象，然后返回一个新函数。
+
+## 对象的继承
+> 
 
