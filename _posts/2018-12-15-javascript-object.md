@@ -252,5 +252,140 @@ ClassB.prototype.print = function() {
 
 #### 多重继承
 
+* JavaScript 不提供多重继承功能，即不允许一个对象同时继承多个对象。但是，可以通过变通方法，实现这个功能。下面代码中，子类S同时继承了父类M1和M2。这种模式又称为 **Mixin（混入）**。      
 
+```javascript
+function M1() {
+  this.hello = 'hello';
+}
 
+function M2() {
+  this.world = 'world';
+}
+
+function S() {
+  M1.call(this);
+  M2.call(this);
+}
+
+// 继承 M1
+S.prototype = Object.create(M1.prototype);
+// 继承链上加入 M2
+Object.assign(S.prototype, M2.prototype);
+
+// 指定构造函数
+S.prototype.constructor = S;
+
+var s = new S();
+s.hello // 'hello'
+s.world // 'world'
+```
+## 模块
+> 模块是实现特定功能的一组属性和方法的封装。JavaScript 不是一种模块化编程语言，ES6才开始支持“类”和“模块”。下面介绍利用对象实现模块的传统方法。
+
+#### 基本的实现方法
+* 简单做法是把模块写成一个对象，所有模块成员都放到这个对象里面。如下所示，但是这样写法会暴露所有成员，内部状态可以被外部改写。如外部代码可以直接改变内部技术器_count的值。       
+
+```javascript
+var module1 = new Object({
+　_count : 0,
+　m1 : function (){
+　　
+　},
+　m2 : function (){
+  　
+　}
+});
+
+module1._count = 5; //直接改变内部计数器的值
+```
+#### 利用构造函数封装私有变量    
+
+```javascript
+function StringBuilder() {
+  var buffer = [];
+
+  this.add = function (str) {
+     buffer.push(str);
+  };
+
+  this.toString = function () {
+    return buffer.join('');
+  };
+
+}
+```     
+
+* buffer是模块的私有变量。一旦生成实例对象，外部是无法直接访问buffer的。但是，这种方法将私有变量封装在构造函数中，导致构造函数与实例对象是一体的，总是存在于内存之中，无法在使用完成后清除。这意味着，构造函数有双重作用，既用来塑造实例对象，又用来保存实例对象的数据，违背了构造函数与实例对象在数据上相分离的原则。
+
+#### 利用IIFE封装私有变量
+> “立即执行函数”（Immediately-Invoked Function Expression，IIFE）
+* 将相关的属性和方法封装在一个函数作用域里面，可以达到不暴露私有成员的目的。如下, 这种写法是 JavaScript 模块的基本写法。
+
+```javascript
+var module1 = (function () {
+　var _count = 0;
+　var m1 = function () {
+　 
+　};
+　var m2 = function () {
+　　
+　};
+　return {
+　　m1 : m1,
+　　m2 : m2
+　};
+})();
+```
+#### 模块的放大模式
+* 一个模块很大，必须分成几个部分，或者一个模块需要继承另一个模块，这时就有必要采用“放大模式”（augmentation）。如下代码，module1模块添加了一个新方法m3()，然后返回新的module1模块。   
+
+```javascript
+var module1 = (function (mod){
+　mod.m3 = function () {
+　　//...
+　};
+　return mod;
+})(module1);
+```
+* 在浏览器环境中，模块的各个部分通常都是从网上获取的，有时无法知道哪个部分会先加载。如果采用上面的写法，第一个执行的部分有可能加载一个不存在空对象，这时就要采用"宽放大模式"（Loose augmentation）。如下代码，与"放大模式"相比，“宽放大模式”就是“立即执行函数”的参数可以是空对象。   
+
+```javascript
+var module1 = (function (mod) {
+　
+　return mod;
+})(window.module1 || {});
+```
+#### 输入全局变量
+* 为了在模块内部调用全局变量，必须显式地将其他变量输入模块。如下：module1模块需要使用 jQuery 库和 YUI 库，就把这两个库（其实是两个模块）当作参数输入module1。这样做除了保证模块的独立性，还使得模块之间的依赖关系变得明显。
+
+```javascript
+var module1 = (function ($, YAHOO) {
+　//...
+})(jQuery, YAHOO);
+```
+* 立即执行函数还可以起到命名空间的作用。如下：finalCarousel对象输出到全局，对外暴露init和destroy接口，内部方法go、handleEvents、initialize、dieCarouselDie都是外部无法调用的。   
+
+```javascript
+(function($, window, document) {
+
+  function go(num) {
+  }
+
+  function handleEvents() {
+  }
+
+  function initialize() {
+  }
+
+  function dieCarouselDie() {
+  }
+
+  //attach to the global scope
+  window.finalCarousel = {
+    init : initialize,
+    destroy : dieCarouselDie
+  }
+
+})( jQuery, window, document );
+```
