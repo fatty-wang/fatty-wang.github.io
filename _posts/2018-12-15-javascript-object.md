@@ -65,7 +65,7 @@ f() // Uncaught Error: 请使用 new 命令调用！
 
 ## 关键字this
 * 关键字this总是返回一个对象，代表属性或者方法“当前”所在的对象。this的值取决于调用的模式。
-* 函数可以作为对象的属性，也可以独立存在。即函数可以在不同的上下文环境中执行。**所以需要有一种机制，能够在函数体内部获得当前的context。this设计的目的就是在函数体内部，指代函数当前的运行环境**。       
+* 函数可以作为对象的属性，也可以独立存在。即函数可以在不同的上下文环境中执行。**所以需要有一种机制，能够在函数体内部获得当前的context。this设计的目的就是在函数体内部，指代函数当前的运行环境**。          
 
 ```javascript
 var f = function () {
@@ -160,5 +160,94 @@ add.call(this, 1, 2) //
 * bind方法用于将函数体内的this绑定到某个对象，然后返回一个新函数。
 
 ## 对象的继承
-> z
+> 大部分面向对象的语言，都是通过“类”(class)实现对象的继承。传统上，JavaScript的继承不通过class，而是通过“原型对象”(prototype)实现。ES6中引入了class语法，可以通过class实现继承。
+
+#### 构造函数的缺点
+* 构造函数可以当做对象的模板，实例对象的属性和方法可以定义在构造函数内部。**但是，同一构造函数的多个实例之间，无法共享属性**。       
+```javascript
+function Cat(name, color) {
+  this.name = name;
+  this.color = color;
+  this.meow = function () {
+    console.log('喵喵');
+  };
+}
+
+var cat1 = new Cat('大毛', '白色');
+var cat2 = new Cat('二毛', '黑色');
+
+cat1.meow === cat2.meow  //false
+```     
+上面代码中，cat1和cat2是Cat构造函数的两个实例，都具有meow方法。由于meow方法是生成在每个实例对象上面，所以两个实例就生成了两次。也就是说，每新建一个实例，就会新建一个meow方法。这既没有必要，又浪费系统资源，因为所有meow方法都是同样的行为，完全应该共享。
+* JavaScript中使用原型对象prototype来解决这个问题。
+
+#### prototype 属性的作用
+* JavaScript 继承机制的设计思想就是，**原型对象的所有属性和方法，都能被实例对象共享。**
+* JavaScript 规定，每个函数都有一个prototype属性，指向一个对象。对于普通函数来说，该属性基本无用。但是，**对于构造函数来说，生成实例的时候，该属性会自动成为实例对象的原型。**     
+```javascript
+function Animal(name) {
+  this.name = name;
+}
+Animal.prototype.color = 'white';
+
+var cat1 = new Animal('大毛');
+var cat2 = new Animal('二毛');
+
+cat1.color // 'white'
+cat2.color // 'white'
+```     
+上面代码中，构造函数Animal的prototype属性，就是实例对象cat1和cat2的原型对象。原型对象上添加一个color属性，实例对象都共享了该属性。
+* 原型对象的属性不是实例对象自身的属性。只要修改原型对象，变动就立刻会体现在所有实例对象上。
+* 当实例对象本身没有某个属性或者方法时，就会到原型对象对寻找该属性或方法。如果实例对象自身存在这个属性或者方法，就不会再去原型对象寻找。
+* 原型对象的作用，就是定义所有实例对象共享的属性和方法。这也是它被称为原型对象的原因，而实例对象可以视作从原型对象衍生出来的子对象。
+
+#### 原型链
+
+* JavaScript 规定，所有对象都有自己的原型对象（prototype）。一方面，任何一个对象，都可以充当其他对象的原型；另一方面，由于原型对象也是对象，所以它也有自己的原型。因此，就会形成一个“原型链”（prototype chain）：对象到原型，再到原型的原型……
+* 所有对象的原型都可以上溯到Object.prototype,即构造函数prototype属性。Object.prototype的原型是null。即原型链的尽头是null。
+* 读取对象的某个属性时，JavaScript 引擎先寻找对象本身的属性，如果找不到，就到它的原型去找，如果还是找不到，就到原型的原型去找。如果直到最顶层的Object.prototype还是找不到，则返回undefined。如果对象自身和它的原型，都定义了一个同名属性，那么优先读取对象自身的属性，这叫做“覆盖”（overriding）。
+
+#### constructor 属性
+* prototype对象有一个constructor属性，默认指向prototype对象所在的构造函数。由于constructor属性定义在prototype对象上面，意味着可以被所有实例对象继承。
+* constructor属性的作用：
+1. 可以得知某个实例对象，是由哪个构造函数产生的。
+2. 有了constructor属性，就可以从一个实例对象新建另一个实例。    
+
+```javascript
+function Constr() {}
+var x = new Constr();
+
+var y = new x.constructor();
+y instanceof Constr // true
+```   
+上面代码中，x是构造函数Constr的实例，可以从x.constructor间接调用构造函数。
+* constructor属性表示原型对象与构造函数之间的关联关系，**如果修改了原型对象，一般会同时修改constructor属性**，防止引用的时候出错。
+#### 构造函数的继承
+* instanceof运算符返回一个布尔值，表示对象是否为某个构造函数的实例。
+* 一个构造函数继承另外一个构造函数，可以分为两步实现：
+1. 在子类的构造函数中，调用父类的构造函数。下面代码中，Sub是子类的构造函数，this是子类的实例。在实例上调用父类的构造函数Super，就会让子类实例具有父类实例的属性。
+```javascript
+function Sub(value) {
+    Super.call(this);
+    this.prop = value;
+}
+```
+2. 将子类的原型指向父类的原型，这样子类就可以继承父类原型。下面代码中，Sub.prototype是子类的原型，将它赋值为Object.create(Super.prototype),而不是直接等于Super.prototype。否则对Sub.prototype的操作，会连父类的原型一起修改掉。      
+
+```javascript
+Sub.prototype = Object.create(Super.prototype);
+Sub.prototype.constructor = Sub;
+Sub.prototype.method = '...';
+```
+* 有时只需要单个方法的继承，这时可以采用下面的写法:       
+
+```javascript
+ClassB.prototype.print = function() {
+    ClassA.prototype.print.call(this);
+}
+```
+
+#### 多重继承
+
+
 
