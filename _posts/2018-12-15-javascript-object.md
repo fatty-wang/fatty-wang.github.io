@@ -164,6 +164,7 @@ add.call(this, 1, 2) //
 
 #### 构造函数的缺点
 * 构造函数可以当做对象的模板，实例对象的属性和方法可以定义在构造函数内部。**但是，同一构造函数的多个实例之间，无法共享属性**。       
+
 ```javascript
 function Cat(name, color) {
   this.name = name;
@@ -184,6 +185,7 @@ cat1.meow === cat2.meow  //false
 #### prototype 属性的作用
 * JavaScript 继承机制的设计思想就是，**原型对象的所有属性和方法，都能被实例对象共享。**
 * JavaScript 规定，每个函数都有一个prototype属性，指向一个对象。对于普通函数来说，该属性基本无用。但是，**对于构造函数来说，生成实例的时候，该属性会自动成为实例对象的原型。**     
+
 ```javascript
 function Animal(name) {
   this.name = name;
@@ -225,7 +227,8 @@ y instanceof Constr // true
 #### 构造函数的继承
 * instanceof运算符返回一个布尔值，表示对象是否为某个构造函数的实例。
 * 一个构造函数继承另外一个构造函数，可以分为两步实现：
-1. 在子类的构造函数中，调用父类的构造函数。下面代码中，Sub是子类的构造函数，this是子类的实例。在实例上调用父类的构造函数Super，就会让子类实例具有父类实例的属性。
+1. 在子类的构造函数中，调用父类的构造函数。下面代码中，Sub是子类的构造函数，this是子类的实例。在实例上调用父类的构造函数Super，就会让子类实例具有父类实例的属性。   
+
 ```javascript
 function Sub(value) {
     Super.call(this);
