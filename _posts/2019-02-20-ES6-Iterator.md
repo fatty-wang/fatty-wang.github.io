@@ -188,6 +188,7 @@ for (let line of readLinesSync(fileName)) {
 ## for...of循环
 * for...of循环内部调用的是数据结构的Symbol.iterator方法。
 * 数组：
+
 ```javascript
 const arr = ['red', 'green', 'blue'];
 
