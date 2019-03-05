@@ -125,4 +125,4 @@ export let heroServiceProvider =
 provide(NG_VALIDATORS, { useExisting: class),    multi: true })
 ```
 * multi是提供商配置对象的**可选参数**。
-* multi: true means that one provider token provides an array of elements. For example all directives for router support routerLink, router-outlet are provided by ROUTER_DIRECTIVES. If a new provider is registered with the token ROUTER_DIRECTIVES, then it overrides the previously registered directives. If multi: true (on the first registered and the new provider) is set, the new directives are added to the previously registered directives instead of overriding.
+* **multi: true** means that one provider token provides an array of elements. For example all directives for router support routerLink, router-outlet are provided by ROUTER_DIRECTIVES. If a new provider is registered with the token ROUTER_DIRECTIVES, then it overrides the previously registered directives. If multi: true (on the first registered and the new provider) is set, the new directives are added to the previously registered directives instead of overriding.
