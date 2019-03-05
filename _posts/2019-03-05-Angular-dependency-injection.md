@@ -75,3 +75,46 @@ constructor(@Optional() private logger: Logger) {
 * 注入器本质上并不属于组件，而是 DOM 中该组件实例所附着到的元素。另一个 DOM 元素上的其它组件实例则会使用另一个注入器。组件是一种特殊的指令，@Component()中的providers属性是从@Directive()中继承来的。指令也能拥有依赖，并且你也可以在它们的@Directive()元数据中配置提供商。当你使用providers属性为组件或指令配置提供商时，该提供商属于所在DOM元素的那个注入器。同一个元素上的组件与指令共享同一个注入器。
 * 当一个组件申请获得一个依赖时，Angular 先尝试用该组件自己的注入器来满足它。 如果该组件的注入器没有找到对应的提供商，它就把这个申请转给它父组件的注入器来处理。 如果那个注入器也无法满足这个申请，它就继续转给它在注入器树中的父注入器。 这个申请继续往上冒泡 —— 直到 Angular 找到一个能处理此申请的注入器或者超出了组件树中的祖先位置为止。 如果超出了组件树中的祖先还未找到，Angular 就会抛出一个错误。
 * **如果你在不同的层级上为同一个DI令牌注册了提供商，那么Angular所碰到的第一个注入器就会用来提供该依赖。**
+
+#### 依赖提供商(Provider)
+* 依赖提供商会使用DI令牌来配置注入器，注入器会用它来提供这个依赖值的具体的、运行时版本。注入器依靠"提供商配置"来创建依赖的实例，并把该实例注入到组件、指令、管道和其它服务中。必须使用提供商来配置注入器，否则注入器就无法知道如何创建此依赖。 注入器创建服务实例的最简单方法，就是用这个服务类本身来创建它。如果你把服务类作为此服务的DI令牌，注入器的默认行为就是new出这个类实例。
+* 类提供商的语法实际上是一种简写形式，它会扩展成一个由 Provider 接口定义的提供商配置对象。
+
+```typescript
+providers: [Logger]
+
+扩展成
+providers: [{provide: Logger, useClass: Logger}]
+```
+* 扩展的提供商配置是一个具有两个属性的对象字面量。provide属性存有令牌，它作为一个key，在定位依赖值和配置注入器时使用。第二个属性是一个**提供商定义对象**，它告诉注入器要如何创建依赖值。 提供商定义对象中的 key可以是**useClass**,也可以是**useExisting**、**useValue** 或 **useFactory**。每一个 key 都用于提供一种不同类型的依赖。
+
+```typescript
+[ NewLogger,
+  // Not aliased! Creates two instances of `NewLogger`
+  { provide: OldLogger, useClass: NewLogger}]
+
+[ NewLogger,
+  // Alias OldLogger w/ reference to NewLogger
+  { provide: OldLogger, useExisting: NewLogger}]
+```
+* 上述代码中，使用useClass，会产生两个NewLogger实例，而使用userExisting只会产生一个实例。
+* **值提供商** 提供一个现成的对象会比要求注入器从类去创建更简单一些。 如果要注入一个已经创建过的对象，请使用useValue选项来配置该注入器。
+* 不能用TypeScript的接口作为令牌。 **在TypeScript中，接口是一个设计期的概念，无法用作DI框架在运行期所需的令牌。**
+* 为**非类依赖**(要注入的不是类，可能是字符串或函数、对象)选择提供商令牌的解决方案是定义并使用**InjectionToken对象**。
+###### 工厂提供商(useFactory)
+* 有时候需要动态创建依赖值，创建时需要的信息你要等运行期间才能拿到。这种情况下，可以使用工厂提供商。需要从第三方库创建依赖项实例时，工厂提供商也很有用，因为第三方库不是为 DI 而设计的。
+* 工厂提供商需要一个工厂函数。工厂函数返回实例依赖：
+
+```typescript
+let heroServiceFactory = (logger: Logger, userService: UserService) => {
+  return new HeroService(logger, userService.user.isAuthorized);
+};
+
+export let heroServiceProvider =
+  { provide: HeroService,
+    useFactory: heroServiceFactory,
+    deps: [Logger, UserService]
+  };
+```
+* useFactory字段告诉 Angular 该提供商是一个工厂函数，该函数的实现代码是 heroServiceFactory。
+* deps属性是一个提供商令牌数组。 Logger 和 UserService 类作为它们自己的类提供商令牌使用。 注入器解析这些令牌，并把与之对应的服务注入到相应的工厂函数参数表中。
