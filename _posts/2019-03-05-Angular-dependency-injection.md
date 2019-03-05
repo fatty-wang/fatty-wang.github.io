@@ -78,7 +78,7 @@ constructor(@Optional() private logger: Logger) {
 
 #### 依赖提供商(Provider)
 * 依赖提供商会使用DI令牌来配置注入器，注入器会用它来提供这个依赖值的具体的、运行时版本。注入器依靠"提供商配置"来创建依赖的实例，并把该实例注入到组件、指令、管道和其它服务中。必须使用提供商来配置注入器，否则注入器就无法知道如何创建此依赖。 注入器创建服务实例的最简单方法，就是用这个服务类本身来创建它。如果你把服务类作为此服务的DI令牌，注入器的默认行为就是new出这个类实例。
-* 类提供商的语法实际上是一种简写形式，它会扩展成一个由 Provider 接口定义的提供商配置对象。
+* 类提供商的语法实际上是一种简写形式，它会扩展成一个由 Provider 接口定义的**提供商配置对象**。
 
 ```typescript
 providers: [Logger]
@@ -118,3 +118,11 @@ export let heroServiceProvider =
 ```
 * useFactory字段告诉 Angular 该提供商是一个工厂函数，该函数的实现代码是 heroServiceFactory。
 * deps属性是一个提供商令牌数组。 Logger 和 UserService 类作为它们自己的类提供商令牌使用。 注入器解析这些令牌，并把与之对应的服务注入到相应的工厂函数参数表中。
+
+#### multi
+
+```typescript
+provide(NG_VALIDATORS, { useExisting: class),    multi: true })
+```
+* multi是提供商配置对象的**可选参数**。
+* multi: true means that one provider token provides an array of elements. For example all directives for router support routerLink, router-outlet are provided by ROUTER_DIRECTIVES. If a new provider is registered with the token ROUTER_DIRECTIVES, then it overrides the previously registered directives. If multi: true (on the first registered and the new provider) is set, the new directives are added to the previously registered directives instead of overriding.
